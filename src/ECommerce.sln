@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{AD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API", "Services\Catalog.API\Catalog.API.csproj", "{DCE00591-D7FB-49DB-9ECF-29B6F02C36BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks", "BuildingBlocks\BuildingBlocks.csproj", "{336F920E-EBE7-4AE3-A4EF-FC7DD79B09B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{DCE00591-D7FB-49DB-9ECF-29B6F02C36BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCE00591-D7FB-49DB-9ECF-29B6F02C36BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCE00591-D7FB-49DB-9ECF-29B6F02C36BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{336F920E-EBE7-4AE3-A4EF-FC7DD79B09B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{336F920E-EBE7-4AE3-A4EF-FC7DD79B09B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{336F920E-EBE7-4AE3-A4EF-FC7DD79B09B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{336F920E-EBE7-4AE3-A4EF-FC7DD79B09B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DCE00591-D7FB-49DB-9ECF-29B6F02C36BE} = {ADDC1452-8B8C-437C-9ECA-568FBE794B6C}
