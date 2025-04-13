@@ -1,0 +1,24 @@
+services:
+  catalog.db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=catalog
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgresql/data
+  catalog.api:
+    image: ghanem22/catalog-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Catalog.API/Dockerfile
+    ports:
+      - 5001:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=catalog.db;Port=5432;Database=catalog;User Id=postgres;Password=postgres;Include Error Detail=true
+    depends_on:
+      - catalog.db

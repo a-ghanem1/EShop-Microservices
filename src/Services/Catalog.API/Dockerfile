@@ -1,23 +1,22 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["Services/Catalog.API/Catalog.API.csproj", "Services/Catalog.API/"]
-RUN dotnet restore "./Services/Catalog.API/./Catalog.API.csproj"
-COPY . .
-WORKDIR "/src/Services/Catalog.API"
-RUN dotnet build "./Catalog.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
-
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Catalog.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Catalog.API.dll"]
+EXPOSE 80
+
+# copy all .csproj files and restore as distinct layers.  Use the same COPY
+# for every dockerfile in the project to take advantage of Docker caching
+COPY ECommerce.sln ECommerce.sln
+COPY src/Services/Catalog.API/Catalog.API.csproj src/Services/Catalog.API/Catalog.API.csproj
+COPY src/BuildingBlocks/BuildingBlocks.csproj src/BuildingBlocks/BuildingBlocks.csproj
+
+RUN dotnet restore ECommerce.sln
+
+COPY src/Services/Catalog.API src/Services/Catalog.API
+COPY src/BuildingBlocks src/BuildingBlocks
+
+WORKDIR /app/src/Services/Catalog.API
+RUN dotnet publish -c Release -o /app/src/out
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/src/out .
+ENTRYPOINT [ "dotnet", "Catalog.API.dll" ]
