@@ -1,6 +1,3 @@
-
-using Catalog.API.Common.Exceptions;
-
 namespace Catalog.API.Features.Products.GetProductById;
 
 internal class GetProductByIdQueryHandler : IQueryHandler<GetProductByIdQuery, GetProductByIdResponse>

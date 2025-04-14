@@ -20,6 +20,9 @@ builder.Services.AddMarten(opts =>
    opts.Connection(builder.Configuration.GetConnectionString("DefaultConnection"));
 }).UseLightweightSessions();
 
+if (builder.Environment.IsDevelopment())
+   builder.Services.InitializeMartenWith<InitialDataSeeder>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline

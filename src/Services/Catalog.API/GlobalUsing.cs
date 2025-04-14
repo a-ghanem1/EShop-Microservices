@@ -8,3 +8,4 @@ global using Marten;
 global using BuildingBlocks.Behaviors;
 global using FluentValidation;
 global using BuildingBlocks.Exceptions.Handlers;
+global using Catalog.API.Infrastructure.Seeders;
