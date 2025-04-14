@@ -1,4 +1,6 @@
 
+using Marten.Pagination;
+
 namespace Catalog.API.Features.Products.GetProducts;
 
 internal class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, GetProductsResponse>
@@ -14,7 +16,11 @@ internal class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, GetProd
     {
         var products = await _session
             .Query<Product>()
-            .ToListAsync(cancellationToken);
+            .ToPagedListAsync(
+                request.PageNumber ?? 1, 
+                request.PageSize ?? 10, 
+                cancellationToken
+            );
 
         return new GetProductsResponse { Products = products };
     }
