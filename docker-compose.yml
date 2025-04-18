@@ -22,6 +22,16 @@ services:
       - ConnectionStrings__DefaultConnection=Server=catalog.db;Port=5432;Database=catalog;User Id=postgres;Password=postgres;Include Error Detail=true
     depends_on:
       - catalog.db
+  basket.db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=basket
+    ports:
+      - 5433:5432
+    volumes:
+      - /var/lib/postgresql/data
   basket.api:
     image: ghanem22/basket-api:latest
     build:
@@ -32,3 +42,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=basket.db;Port=5433;Database=catalog;User Id=postgres;Password=postgres;Include Error Detail=true
+    depends_on:
+      - basket.db
