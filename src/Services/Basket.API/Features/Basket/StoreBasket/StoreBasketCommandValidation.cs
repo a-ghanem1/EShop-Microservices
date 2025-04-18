@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace Basket.API.Features.Basket.StoreBasket;
 
 public class StoreBasketCommandValidation : AbstractValidator<StoreBasketCommand>
