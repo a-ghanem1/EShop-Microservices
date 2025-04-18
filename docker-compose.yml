@@ -22,3 +22,13 @@ services:
       - ConnectionStrings__DefaultConnection=Server=catalog.db;Port=5432;Database=catalog;User Id=postgres;Password=postgres;Include Error Detail=true
     depends_on:
       - catalog.db
+  basket.api:
+    image: ghanem22/basket-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Basket.API/Dockerfile
+    ports:
+      - 5002:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
