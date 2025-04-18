@@ -1,5 +1,3 @@
-using BuildingBlocks.CQRS;
-
 namespace Basket.API.Features.Basket.GetBasket;
 
 public class GetBasketQuery : IQuery<GetBasketResponse>
