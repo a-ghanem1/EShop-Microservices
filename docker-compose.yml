@@ -1,4 +1,8 @@
 services:
+  distributedcache:
+    image: redis
+    ports:
+      - 6379:6379
   catalog.db:
     image: postgres
     environment:
@@ -27,10 +31,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=basket
-    ports:
-      - 5433:5432
-    volumes:
+      - POSTGRES_DB=basketdsa
       - /var/lib/postgresql/data
   basket.api:
     image: ghanem22/basket-api:latest
@@ -43,5 +44,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=basket.db;Port=5432;Database=basket;User Id=postgres;Password=postgres;Include Error Detail=true
+      - ConnectionStrings__Redis=distributedcache
     depends_on:
       - basket.db
+      - distributedcache
