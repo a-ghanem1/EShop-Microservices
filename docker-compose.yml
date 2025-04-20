@@ -53,3 +53,14 @@ services:
     depends_on:
       - basket.db
       - distributedcache
+  discount.grpc:
+    image: ghanem22/discount-grpc:latest
+    build:
+      context: .
+      dockerfile: src/Services/Discount.Grpc/Dockerfile
+    ports:
+      - 5003:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Data Source=Discount.db

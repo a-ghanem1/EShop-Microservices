@@ -7,12 +7,14 @@ EXPOSE 80
 COPY ECommerce.sln ECommerce.sln
 COPY src/Services/Catalog.API/Catalog.API.csproj src/Services/Catalog.API/Catalog.API.csproj
 COPY src/Services/Basket.API/Basket.API.csproj src/Services/Basket.API/Basket.API.csproj
+COPY src/Services/Discount.Grpc/Discount.Grpc.csproj src/Services/Discount.Grpc/Discount.Grpc.csproj
 COPY src/BuildingBlocks/BuildingBlocks.csproj src/BuildingBlocks/BuildingBlocks.csproj
 
 RUN dotnet restore ECommerce.sln
 
 COPY src/Services/Catalog.API src/Services/Catalog.API
 COPY src/Services/Basket.API src/Services/Basket.API
+COPY src/Services/Discount.Grpc src/Services/Discount.Grpc
 COPY src/BuildingBlocks src/BuildingBlocks
 
 WORKDIR /app/src/Services/Basket.API
