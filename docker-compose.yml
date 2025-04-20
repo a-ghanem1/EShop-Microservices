@@ -33,7 +33,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=basketdsa
+      - POSTGRES_DB=basket
       - /var/lib/postgresql/data
     restart: always
     ports:
@@ -50,9 +50,11 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=basket.db;Port=5432;Database=basket;User Id=postgres;Password=postgres;Include Error Detail=true
       - ConnectionStrings__Redis=distributedcache
+      - GrpcSettings__DiscountUrl=http://discount.grpc
     depends_on:
       - basket.db
       - distributedcache
+      - discount.grpc
   discount.grpc:
     image: ghanem22/discount-grpc:latest
     build:
@@ -64,3 +66,4 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Data Source=Discount.db
+      - Kestrel__EndpointDefaults__Protocols=Http2
