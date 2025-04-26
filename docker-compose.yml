@@ -67,3 +67,26 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Data Source=Discount.db
       - Kestrel__EndpointDefaults__Protocols=Http2
+  order.db:
+    image: mcr.microsoft.com/mssql/server
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=password
+      - MSSQL_PID=Developer
+    ports:
+      - 1433:1433
+
+  ordering.api:
+    image: ghanem22/ordering-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Ordering/Ordering.API/Dockerfile
+    ports:
+      - 5004:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=order.db,1433;Database=OrderingDb;User Id=sa;Password=password;TrustServerCertificate=True;
+    depends_on:
+      - order.db
