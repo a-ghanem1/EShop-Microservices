@@ -2,8 +2,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 EXPOSE 80
 
-# copy all .csproj files and restore as distinct layers.  Use the same COPY
-# for every dockerfile in the project to take advantage of Docker caching
 COPY ECommerce.sln ECommerce.sln
 COPY src/Services/Catalog.API/Catalog.API.csproj src/Services/Catalog.API/Catalog.API.csproj
 COPY src/Services/Basket.API/Basket.API.csproj src/Services/Basket.API/Basket.API.csproj
@@ -16,19 +14,11 @@ COPY src/BuildingBlocks/BuildingBlocks.csproj src/BuildingBlocks/BuildingBlocks.
 
 RUN dotnet restore ECommerce.sln
 
-COPY src/Services/Catalog.API src/Services/Catalog.API
-COPY src/Services/Basket.API src/Services/Basket.API
-COPY src/Services/Discount.Grpc src/Services/Discount.Grpc
-COPY src/Services/Ordering/Ordering.API src/Services/Ordering/Ordering.API
-COPY src/Services/Ordering/Ordering.Application src/Services/Ordering/Ordering.Application
-COPY src/Services/Ordering/Ordering.Infrastructure src/Services/Ordering/Ordering.Infrastructure
-COPY src/Services/Ordering/Ordering.Domain src/Services/Ordering/Ordering.Domain
-COPY src/BuildingBlocks src/BuildingBlocks
-
+COPY src/ src/
 WORKDIR /app/src/Services/Catalog.API
-RUN dotnet publish -c Release -o /app/src/out
+RUN dotnet publish -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-COPY --from=build /app/src/out .
-ENTRYPOINT [ "dotnet", "Catalog.API.dll" ]
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "Catalog.API.dll"]

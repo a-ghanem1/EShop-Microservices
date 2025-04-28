@@ -4,6 +4,7 @@ services:
     restart: always
     ports:
       - 6379:6379
+
   catalog.db:
     image: postgres
     environment:
@@ -14,7 +15,8 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - /var/lib/postgresql/data
+      - catalog_data:/var/lib/postgresql/data
+
   catalog.api:
     image: ghanem22/catalog-api:latest
     build:
@@ -28,16 +30,19 @@ services:
       - ConnectionStrings__DefaultConnection=Server=catalog.db;Port=5432;Database=catalog;User Id=postgres;Password=postgres;Include Error Detail=true
     depends_on:
       - catalog.db
+
   basket.db:
     image: postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=basket
-      - /var/lib/postgresql/data
     restart: always
     ports:
       - 5433:5432
+    volumes:
+      - basket_data:/var/lib/postgresql/data
+
   basket.api:
     image: ghanem22/basket-api:latest
     build:
@@ -55,6 +60,7 @@ services:
       - basket.db
       - distributedcache
       - discount.grpc
+
   discount.grpc:
     image: ghanem22/discount-grpc:latest
     build:
@@ -67,12 +73,13 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Data Source=Discount.db
       - Kestrel__EndpointDefaults__Protocols=Http2
+
   order.db:
     image: mcr.microsoft.com/mssql/server
     restart: always
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=password
+      - MSSQL_SA_PASSWORD=Password@123
       - MSSQL_PID=Developer
     ports:
       - 1433:1433
@@ -87,6 +94,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=order.db,1433;Database=OrderingDb;User Id=sa;Password=password;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=order.db,1433;Database=OrderingDb;User Id=sa;Password=Password@123;TrustServerCertificate=True
     depends_on:
       - order.db
+
+volumes:
+  catalog_data:
+  basket_data:
