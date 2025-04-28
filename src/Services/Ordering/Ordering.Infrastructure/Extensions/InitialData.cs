@@ -4,7 +4,7 @@ internal class InitialData
 {
     public static IEnumerable<Customer> Customers =>
     [
-        Customer.Create(CustomerId.Of(new Guid("58c49479-ec65-4de2-86e7-033c546291aa")), "mehmet", "mehmet@gmail.com"),
+        Customer.Create(CustomerId.Of(new Guid("58c49479-ec65-4de2-86e7-033c546291aa")), "ghanem", "ghanem@gmail.com"),
         Customer.Create(CustomerId.Of(new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d")), "john", "john@gmail.com")
     ];
 
@@ -20,10 +20,10 @@ internal class InitialData
     {
         get
         {
-            var address1 = Address.Of("mehmet", "ozkaya", "mehmet@gmail.com", "Bahcelievler No:4", "Turkey", "Istanbul", "38050");
+            var address1 = Address.Of("ghanem", "ghanem", "ghanem@gmail.com", "Bahcelievler No:4", "Turkey", "Istanbul", "38050");
             var address2 = Address.Of("john", "doe", "john@gmail.com", "Broadway No:1", "England", "Nottingham", "08050");
 
-            var payment1 = Payment.Of("mehmet", "5555555555554444", "12/28", "355", 1);
+            var payment1 = Payment.Of("ghanem", "5555555555554444", "12/28", "355", 1);
             var payment2 = Payment.Of("john", "8885555555554444", "06/30", "222", 2);
 
             var order1 = Order.Create(
