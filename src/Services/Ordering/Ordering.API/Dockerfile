@@ -11,6 +11,7 @@ COPY src/Services/Catalog.API/Catalog.API.csproj src/Services/Catalog.API/Catalo
 COPY src/Services/Basket.API/Basket.API.csproj src/Services/Basket.API/Basket.API.csproj
 COPY src/Services/Discount.Grpc/Discount.Grpc.csproj src/Services/Discount.Grpc/Discount.Grpc.csproj
 COPY src/BuildingBlocks/BuildingBlocks.csproj src/BuildingBlocks/BuildingBlocks.csproj
+COPY src/BuildingBlocks.Messaging/BuildingBlock.Messaging.csproj src/BuildingBlocks.Messaging/BuildingBlock.Messaging.csproj
 
 RUN dotnet restore ECommerce.sln
 

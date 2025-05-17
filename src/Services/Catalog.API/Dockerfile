@@ -11,6 +11,7 @@ COPY src/Services/Ordering/Ordering.Application/Ordering.Application.csproj src/
 COPY src/Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj src/Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj
 COPY src/Services/Ordering/Ordering.Domain/Ordering.Domain.csproj src/Services/Ordering/Ordering.Domain/Ordering.Domain.csproj
 COPY src/BuildingBlocks/BuildingBlocks.csproj src/BuildingBlocks/BuildingBlocks.csproj
+COPY src/BuildingBlocks.Messaging/BuildingBlock.Messaging.csproj src/BuildingBlocks.Messaging/BuildingBlock.Messaging.csproj
 
 RUN dotnet restore ECommerce.sln
 
