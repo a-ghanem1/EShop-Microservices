@@ -17,10 +17,10 @@ COPY src/BuildingBlocks.Messaging/BuildingBlock.Messaging.csproj src/BuildingBlo
 RUN dotnet restore ECommerce.sln
 
 COPY src/ src/
-WORKDIR /app/src/Services/Basket.API
+WORKDIR /app/src/ApiGateway
 RUN dotnet publish -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "Basket.API.dll"]
+ENTRYPOINT ["dotnet", "ApiGateway.dll"]
