@@ -10,6 +10,7 @@ COPY src/Services/Ordering/Ordering.API/Ordering.API.csproj src/Services/Orderin
 COPY src/Services/Ordering/Ordering.Application/Ordering.Application.csproj src/Services/Ordering/Ordering.Application/Ordering.Application.csproj
 COPY src/Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj src/Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj
 COPY src/Services/Ordering/Ordering.Domain/Ordering.Domain.csproj src/Services/Ordering/Ordering.Domain/Ordering.Domain.csproj
+COPY src/WebApps/Shopping.Web/Shopping.Web.csproj src/WebApps/Shopping.Web/Shopping.Web.csproj
 COPY src/ApiGateway/ApiGateway.csproj src/ApiGateway/ApiGateway.csproj
 COPY src/BuildingBlocks/BuildingBlocks.csproj src/BuildingBlocks/BuildingBlocks.csproj
 COPY src/BuildingBlocks.Messaging/BuildingBlock.Messaging.csproj src/BuildingBlocks.Messaging/BuildingBlock.Messaging.csproj

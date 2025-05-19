@@ -123,7 +123,7 @@ services:
       context: .
       dockerfile: src/ApiGateway/Dockerfile
     ports:
-      - 5000:80
+      - 5005:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -131,6 +131,19 @@ services:
       - catalog.api
       - basket.api
       - ordering.api
+  shopping.web:
+    image: ghanem22/shopping-web:latest
+    build:
+      context: .
+      dockerfile: src/WebApps/Shopping.Web/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ApiSettings__GatewayAddress=http://api-gateway
+    depends_on:
+      - api-gateway
+    ports:
+      - 5100:80
 
 volumes:
   catalog_data:
