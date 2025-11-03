@@ -18,10 +18,41 @@ spec:
           image: ghanem22/catalog-api:latest
           env:
             - name: ASPNETCORE_ENVIRONMENT
-              value: "Development"
+              valueFrom:
+                configMapKeyRef:
+                  name: catalog-api-config
+                  key: ASPNETCORE_ENVIRONMENT
             - name: ASPNETCORE_URLS
-              value: "http://+:80"
+              valueFrom:
+                configMapKeyRef:
+                  name: catalog-api-config
+                  key: ASPNETCORE_URLS
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: catalog-api-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: catalog-api-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: catalog-api-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-api-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-api-secret
+                  key: DB_PASSWORD
             - name: ConnectionStrings__DefaultConnection
-              value: "Server=catalog-db;Port=5432;Database=catalog;User Id=postgres;Password=postgres;Include Error Detail=true"
+              value: "Server=$(DB_HOST);Port=$(DB_PORT);Database=$(DB_NAME);User Id=$(DB_USER);Password=$(DB_PASSWORD);Include Error Detail=true"
           ports:
             - containerPort: 80
