@@ -16,6 +16,18 @@ spec:
       containers:
         - name: catalog-api
           image: ghanem22/catalog-api:latest
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
           env:
             - name: ASPNETCORE_ENVIRONMENT
               valueFrom:
