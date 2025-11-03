@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: discount-grpc-config
+  namespace: ecommerce
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:80"
+  Kestrel__EndpointDefaults__Protocols: "Http2"
+  ConnectionStrings__DefaultConnection: "Data Source=Discount.db"
