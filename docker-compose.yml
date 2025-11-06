@@ -79,14 +79,16 @@ services:
       - Kestrel__EndpointDefaults__Protocols=Http2
 
   order.db:
-    image: mcr.microsoft.com/mssql/server
+    image: postgres
     restart: always
     environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=Password@123
-      - MSSQL_PID=Developer
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ordering
     ports:
-      - 1433:1433
+      - 5434:5432
+    volumes:
+      - ordering_data:/var/lib/postgresql/data
 
   messagebroker:
     image: rabbitmq:management
@@ -109,7 +111,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=order.db,1433;Database=OrderingDb;User Id=sa;Password=Password@123;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=order.db;Port=5432;Database=OrderingDb;User Id=postgres;Password=postgres;Include Error Detail=true
       - MessageBroker__Host=amqp://ecommerce-mq:5672
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
@@ -148,3 +150,4 @@ services:
 volumes:
   catalog_data:
   basket_data:
+  ordering_data:
