@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: ecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: ghanem22/api-gateway:latest
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: ASPNETCORE_URLS
+            - name: ReverseProxy__Clusters__catalog-cluster__Destinations__destination1__Address
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: ReverseProxy__Clusters__catalog-cluster__Destinations__destination1__Address
+            - name: ReverseProxy__Clusters__basket-cluster__Destinations__destination1__Address
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: ReverseProxy__Clusters__basket-cluster__Destinations__destination1__Address
+            - name: ReverseProxy__Clusters__ordering-cluster__Destinations__destination1__Address
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: ReverseProxy__Clusters__ordering-cluster__Destinations__destination1__Address
+          ports:
+            - containerPort: 80

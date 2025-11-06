@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-gateway-config
+  namespace: ecommerce
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:80"
+  ReverseProxy__Clusters__catalog-cluster__Destinations__destination1__Address: "http://catalog-api"
+  ReverseProxy__Clusters__basket-cluster__Destinations__destination1__Address: "http://basket-api"
+  ReverseProxy__Clusters__ordering-cluster__Destinations__destination1__Address: "http://ordering-api"
