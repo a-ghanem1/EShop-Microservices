@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordering-api
+  namespace: ecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ordering-api
+  template:
+    metadata:
+      labels:
+        app: ordering-api
+    spec:
+      containers:
+        - name: ordering-api
+          image: ghanem22/ordering-api:latest
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: ordering-api-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: ordering-api-config
+                  key: ASPNETCORE_URLS
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ordering-api-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ordering-api-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: ordering-api-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ordering-api-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ordering-api-secret
+                  key: DB_PASSWORD
+            - name: ConnectionStrings__DefaultConnection
+              value: "Server=$(DB_HOST);Port=$(DB_PORT);Database=$(DB_NAME);User Id=$(DB_USER);Password=$(DB_PASSWORD);Include Error Detail=true"
+            - name: MessageBroker__Host
+              valueFrom:
+                configMapKeyRef:
+                  name: ordering-api-config
+                  key: MESSAGE_BROKER_HOST
+            - name: MessageBroker__UserName
+              valueFrom:
+                secretKeyRef:
+                  name: ordering-api-secret
+                  key: MESSAGE_BROKER_USERNAME
+            - name: MessageBroker__Password
+              valueFrom:
+                secretKeyRef:
+                  name: ordering-api-secret
+                  key: MESSAGE_BROKER_PASS
+            - name: FeatureManagement__OrderFullfilment
+              valueFrom:
+                configMapKeyRef:
+                  name: ordering-api-config
+                  key: FEATURE_ORDER_FULLFILMENT
+          ports:
+            - containerPort: 80
