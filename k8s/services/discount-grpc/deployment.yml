@@ -15,6 +15,13 @@ spec:
       containers:
         - name: discount-grpc
           image: ghanem22/discount-grpc:latest
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
           env:
             - name: ASPNETCORE_ENVIRONMENT
               valueFrom:
