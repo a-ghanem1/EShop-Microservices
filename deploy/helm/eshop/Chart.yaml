@@ -25,3 +25,8 @@ dependencies:
     version: 0.1.0
     repository: "file://charts/basket-api"
     condition: basket-api.enabled
+
+  - name: ordering-db
+    version: 0.1.0
+    repository: "file://charts/ordering-db"
+    condition: ordering-db.enabled

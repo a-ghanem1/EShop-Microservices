@@ -9,3 +9,6 @@ basket-db:
 
 basket-api:
   enabled: true
+
+ordering-db:
+  enabled: true

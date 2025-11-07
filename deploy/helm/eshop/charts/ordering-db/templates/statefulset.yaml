@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ordering-db
+  labels:
+    app: ordering-db
+spec:
+  serviceName: ordering-db
+  replicas: {{ .Values.statefulset.replicas }}
+  selector:
+    matchLabels:
+      app: ordering-db
+  template:
+    metadata:
+      labels:
+        app: ordering-db
+    spec:
+      containers:
+        - name: ordering-db
+          image: {{ .Values.statefulset.image }}
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "{{ .Values.statefulset.dbName }}"
+            - name: POSTGRES_USER
+              value: "{{ .Values.statefulset.dbUser }}"
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.statefulset.dbPassword }}"
+          volumeMounts:
+            - name: ordering-db-data
+              mountPath: /var/lib/postgresql
+          resources:
+            {{- toYaml .Values.statefulset.resources | nindent 12 }}
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - {{ .Values.statefulset.dbUser }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: ordering-db-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.statefulset.storage }}
