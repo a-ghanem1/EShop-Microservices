@@ -12,3 +12,6 @@ basket-api:
 
 ordering-db:
   enabled: true
+
+ordering-api:
+  enabled: true

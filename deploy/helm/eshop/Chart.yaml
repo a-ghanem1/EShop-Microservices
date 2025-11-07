@@ -30,3 +30,8 @@ dependencies:
     version: 0.1.0
     repository: "file://charts/ordering-db"
     condition: ordering-db.enabled
+
+  - name: ordering-api
+    version: 0.1.0
+    repository: "file://charts/ordering-api"
+    condition: ordering-api.enabled
