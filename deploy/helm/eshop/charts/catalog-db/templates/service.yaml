@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-db
+  labels:
+    app: catalog-db
+spec:
+  clusterIP: None
+  selector:
+    app: catalog-db
+  ports:
+    - port: 5432
+      targetPort: 5432
