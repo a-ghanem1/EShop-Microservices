@@ -18,3 +18,6 @@ ordering-api:
 
 discount-grpc:
   enabled: true
+
+infra-redis:
+  enabled: true

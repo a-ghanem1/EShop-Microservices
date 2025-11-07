@@ -40,3 +40,8 @@ dependencies:
     version: 0.1.0
     repository: "file://charts/discount-grpc"
     condition: discount-grpc.enabled
+
+  - name: infra-redis
+    version: 0.1.0
+    repository: "file://charts/infra-redis"
+    condition: infra-redis.enabled
