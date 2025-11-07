@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $name := printf "%s-api-gateway" .Release.Name -}}
+{{- $name := "api-gateway" -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

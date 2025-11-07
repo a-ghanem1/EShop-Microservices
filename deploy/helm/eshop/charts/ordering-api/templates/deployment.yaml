@@ -1,4 +1,4 @@
-{{- $name := printf "%s-ordering-api" .Release.Name -}}
+{{- $name := "ordering-api" -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

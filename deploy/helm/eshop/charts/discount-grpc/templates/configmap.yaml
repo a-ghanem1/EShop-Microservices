@@ -1,4 +1,4 @@
-{{- $name := printf "%s-discount-grpc" .Release.Name -}}
+{{- $name := "discount-grpc" -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:

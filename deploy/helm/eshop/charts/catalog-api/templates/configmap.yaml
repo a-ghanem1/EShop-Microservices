@@ -1,4 +1,4 @@
-{{- $name := printf "%s-catalog-api" .Release.Name -}}
+{{- $name := "catalog-api" -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:

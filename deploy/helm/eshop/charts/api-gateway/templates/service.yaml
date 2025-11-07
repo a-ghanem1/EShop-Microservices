@@ -1,4 +1,4 @@
-{{- $name := printf "%s-api-gateway" .Release.Name -}}
+{{- $name := "api-gateway" -}}
 apiVersion: v1
 kind: Service
 metadata:

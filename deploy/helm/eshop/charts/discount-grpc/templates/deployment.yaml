@@ -1,4 +1,4 @@
-{{- $name := printf "%s-discount-grpc" .Release.Name -}}
+{{- $name := "discount-grpc" -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,18 +27,6 @@ spec:
               name: grpc
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: grpc
-            initialDelaySeconds: 15
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: grpc
-            initialDelaySeconds: 5
-            periodSeconds: 5
           env:
             - name: ASPNETCORE_ENVIRONMENT
               valueFrom:

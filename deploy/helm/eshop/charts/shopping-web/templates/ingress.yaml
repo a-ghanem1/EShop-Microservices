@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $name := printf "%s-shopping-web" .Release.Name -}}
+{{- $name := "shopping-web" -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

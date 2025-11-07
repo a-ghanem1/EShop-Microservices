@@ -1,4 +1,4 @@
-{{- $name := printf "%s-basket-api" .Release.Name -}}
+{{- $name := "basket-api" -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
