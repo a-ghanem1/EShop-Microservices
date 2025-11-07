@@ -1,0 +1,13 @@
+{{- $name := printf "%s-discount-grpc" .Release.Name -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $name }}-config
+  labels:
+    app: discount-grpc
+    release: {{ .Release.Name }}
+data:
+  ASPNETCORE_ENVIRONMENT: "{{ .Values.config.aspnetCoreEnvironment }}"
+  ASPNETCORE_URLS: "{{ .Values.config.aspnetCoreUrls }}"
+  ConnectionStrings__DefaultConnection: "{{ .Values.config.connectionString }}"
+  Kestrel__EndpointDefaults__Protocols: "{{ .Values.config.kestrelProtocols }}"

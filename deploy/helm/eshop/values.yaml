@@ -15,3 +15,6 @@ ordering-db:
 
 ordering-api:
   enabled: true
+
+discount-grpc:
+  enabled: true

@@ -35,3 +35,8 @@ dependencies:
     version: 0.1.0
     repository: "file://charts/ordering-api"
     condition: ordering-api.enabled
+
+  - name: discount-grpc
+    version: 0.1.0
+    repository: "file://charts/discount-grpc"
+    condition: discount-grpc.enabled
