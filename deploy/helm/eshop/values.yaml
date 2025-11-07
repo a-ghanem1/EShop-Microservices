@@ -21,3 +21,6 @@ discount-grpc:
 
 infra-redis:
   enabled: true
+
+infra-rabbitmq:
+  enabled: true

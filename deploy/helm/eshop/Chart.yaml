@@ -45,3 +45,8 @@ dependencies:
     version: 0.1.0
     repository: "file://charts/infra-redis"
     condition: infra-redis.enabled
+
+  - name: infra-rabbitmq
+    version: 0.1.0
+    repository: "file://charts/infra-rabbitmq"
+    condition: infra-rabbitmq.enabled
