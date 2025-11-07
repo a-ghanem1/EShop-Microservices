@@ -1,0 +1,57 @@
+{{- $name := printf "%s-shopping-web" .Release.Name -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  labels:
+    app: shopping-web
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: shopping-web
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: shopping-web
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: shopping-web
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ASPNETCORE_URLS
+            - name: ApiSettings__GatewayAddress
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ApiSettings__GatewayAddress

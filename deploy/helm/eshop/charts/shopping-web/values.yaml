@@ -1,0 +1,28 @@
+replicaCount: 1
+
+image:
+  repository: ghanem22/shopping-web
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+config:
+  aspnetCoreEnvironment: Development
+  aspnetCoreUrls: http://+:80
+  gatewayAddress: http://api-gateway
+
+ingress:
+  enabled: true
+  className: nginx
+  host: shop.ecommerce.local
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi

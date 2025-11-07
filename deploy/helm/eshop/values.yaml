@@ -27,3 +27,6 @@ infra-rabbitmq:
 
 api-gateway:
   enabled: true
+
+shopping-web:
+  enabled: true

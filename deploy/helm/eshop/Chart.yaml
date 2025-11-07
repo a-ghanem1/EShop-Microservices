@@ -55,3 +55,8 @@ dependencies:
     version: 0.1.0
     repository: "file://charts/api-gateway"
     condition: api-gateway.enabled
+
+  - name: shopping-web
+    version: 0.1.0
+    repository: "file://charts/shopping-web"
+    condition: shopping-web.enabled
