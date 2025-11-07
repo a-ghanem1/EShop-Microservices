@@ -1,0 +1,14 @@
+{{- $name := printf "%s-catalog-api" .Release.Name -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $name }}-config
+  labels:
+    app: catalog-api
+    release: {{ .Release.Name }}
+data:
+  ASPNETCORE_ENVIRONMENT: "{{ .Values.config.aspnetCoreEnvironment }}"
+  ASPNETCORE_URLS: "{{ .Values.config.aspnetCoreUrls }}"
+  DB_HOST: "{{ .Values.config.dbHost }}"
+  DB_PORT: "{{ .Values.config.dbPort }}"
+  DB_NAME: "{{ .Values.config.dbName }}"

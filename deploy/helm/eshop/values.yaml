@@ -1,2 +1,2 @@
-global:
-  namespace: ecommerce
+catalog-api:
+  enabled: true

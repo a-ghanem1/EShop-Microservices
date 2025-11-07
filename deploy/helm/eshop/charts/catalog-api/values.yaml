@@ -1,0 +1,29 @@
+replicaCount: 1
+
+image:
+  repository: ghanem22/catalog-api
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+config:
+  aspnetCoreEnvironment: Development
+  aspnetCoreUrls: http://+:80
+  dbHost: catalog-db
+  dbPort: "5432"
+  dbName: catalog
+
+secret:
+  dbUser: postgres
+  dbPassword: postgres
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi
