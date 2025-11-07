@@ -24,3 +24,6 @@ infra-redis:
 
 infra-rabbitmq:
   enabled: true
+
+api-gateway:
+  enabled: true

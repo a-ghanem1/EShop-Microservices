@@ -50,3 +50,8 @@ dependencies:
     version: 0.1.0
     repository: "file://charts/infra-rabbitmq"
     condition: infra-rabbitmq.enabled
+
+  - name: api-gateway
+    version: 0.1.0
+    repository: "file://charts/api-gateway"
+    condition: api-gateway.enabled
