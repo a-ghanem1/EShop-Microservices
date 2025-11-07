@@ -10,6 +10,18 @@ dependencies:
     version: 0.1.0
     repository: "file://charts/catalog-api"
     condition: catalog-api.enabled
+
   - name: catalog-db
     version: 0.1.0
     repository: "file://charts/catalog-db"
+    condition: catalog-db.enabled
+
+  - name: basket-db
+    version: 0.1.0
+    repository: "file://charts/basket-db"
+    condition: basket-db.enabled
+
+  - name: basket-api
+    version: 0.1.0
+    repository: "file://charts/basket-api"
+    condition: basket-api.enabled

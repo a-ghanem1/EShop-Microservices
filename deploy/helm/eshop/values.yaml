@@ -1,2 +1,11 @@
 catalog-api:
   enabled: true
+
+catalog-db:
+  enabled: true
+
+basket-db:
+  enabled: true
+
+basket-api:
+  enabled: true
