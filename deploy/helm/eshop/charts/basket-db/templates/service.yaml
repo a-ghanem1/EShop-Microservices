@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: basket-db
+  labels:
+    app: basket-db
+spec:
+  clusterIP: None
+  selector:
+    app: basket-db
+  ports:
+    - port: 5432
+      targetPort: 5432

@@ -1,0 +1,32 @@
+catalog-api:
+  enabled: true
+
+catalog-db:
+  enabled: true
+
+basket-db:
+  enabled: true
+
+basket-api:
+  enabled: true
+
+ordering-db:
+  enabled: true
+
+ordering-api:
+  enabled: true
+
+discount-grpc:
+  enabled: true
+
+infra-redis:
+  enabled: true
+
+infra-rabbitmq:
+  enabled: true
+
+api-gateway:
+  enabled: true
+
+shopping-web:
+  enabled: true

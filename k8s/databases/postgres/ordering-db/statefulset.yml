@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ordering-db
+  namespace: ecommerce
+spec:
+  selector:
+    matchLabels:
+      app: ordering-db
+  serviceName: ordering-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ordering-db
+    spec:
+      containers:
+        - name: ordering-db
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: OrderingDb
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: ordering-db-storage
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 10
+            periodSeconds: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: ordering-db-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

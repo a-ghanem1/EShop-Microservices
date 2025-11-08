@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: ghanem22/api-gateway
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+config:
+  aspnetCoreEnvironment: Development
+  aspnetCoreUrls: http://+:80
+  catalogAddress: http://catalog-api
+  basketAddress: http://basket-api
+  orderingAddress: http://ordering-api
+
+ingress:
+  enabled: true
+  className: nginx
+  host: api.ecommerce.local
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi

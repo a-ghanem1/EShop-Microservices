@@ -1,0 +1,104 @@
+{{- $name := "basket-api" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  labels:
+    app: basket-api
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: basket-api
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: basket-api
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: basket-api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ASPNETCORE_URLS
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $name }}-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $name }}-secret
+                  key: DB_PASSWORD
+            - name: ConnectionStrings__DefaultConnection
+              value: "Server=$(DB_HOST);Port=$(DB_PORT);Database=$(DB_NAME);User Id=$(DB_USER);Password=$(DB_PASSWORD);Include Error Detail=true"
+            - name: MessageBroker__Host
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: MESSAGE_BROKER_HOST
+            - name: MessageBroker__UserName
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $name }}-secret
+                  key: MESSAGE_BROKER_USERNAME
+            - name: MessageBroker__Password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $name }}-secret
+                  key: MESSAGE_BROKER_PASS
+            - name: ConnectionStrings__Redis
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: REDIS_CONNECTION
+            - name: GrpcSettings__DiscountUrl
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: DISCOUNT_GRPC_URL

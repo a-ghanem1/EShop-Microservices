@@ -1,0 +1,12 @@
+{{- $name := "shopping-web" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $name }}-config
+  labels:
+    app: shopping-web
+    release: {{ .Release.Name }}
+data:
+  ASPNETCORE_ENVIRONMENT: "{{ .Values.config.aspnetCoreEnvironment }}"
+  ASPNETCORE_URLS: "{{ .Values.config.aspnetCoreUrls }}"
+  ApiSettings__GatewayAddress: "{{ .Values.config.gatewayAddress }}"

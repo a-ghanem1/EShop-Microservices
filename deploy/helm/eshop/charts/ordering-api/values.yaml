@@ -1,0 +1,33 @@
+replicaCount: 1
+
+image:
+  repository: ghanem22/ordering-api
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+config:
+  aspnetCoreEnvironment: Development
+  aspnetCoreUrls: http://+:80
+  dbHost: ordering-db
+  dbPort: "5432"
+  dbName: OrderingDb
+  messageBrokerHost: amqp://ecommerce-mq:5672
+  featureOrderFullfilment: "false"
+
+secret:
+  dbUser: postgres
+  dbPassword: postgres
+  messageBrokerUser: guest
+  messageBrokerPassword: guest
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi

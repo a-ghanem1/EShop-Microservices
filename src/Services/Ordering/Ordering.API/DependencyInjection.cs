@@ -1,4 +1,5 @@
 using BuildingBlocks.Exceptions.Handlers;
+using HealthChecks.NpgSql;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
@@ -12,7 +13,7 @@ public static class DependencyInjection
         services.AddExceptionHandler<CustomExceptionHandler>();
 
         services.AddHealthChecks()
-            .AddSqlServer(configuration.GetConnectionString("DefaultConnection")!);
+            .AddNpgSql(configuration.GetConnectionString("DefaultConnection")!);
 
         return services;
     }

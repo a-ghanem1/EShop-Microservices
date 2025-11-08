@@ -17,13 +17,18 @@ public class CachedBasketRepository : IBasketRepository
     public async Task<ShoppingCart> GetBasket(string userName, CancellationToken cancellationToken)
     {
         var cachedBasket = await _cache.GetStringAsync(userName, cancellationToken);
-        if (string.IsNullOrEmpty(cachedBasket))
+        if (!string.IsNullOrEmpty(cachedBasket))
             return JsonSerializer.Deserialize<ShoppingCart>(cachedBasket)!;
 
         var basket = await _repository.GetBasket(userName, cancellationToken);
-        await _cache.SetStringAsync(userName, JsonSerializer.Serialize(basket), cancellationToken);
 
-        return basket;
+        if (basket is not null)
+        {
+            await _cache.SetStringAsync(userName, JsonSerializer.Serialize(basket), cancellationToken);
+            return basket;
+        }
+
+        return new ShoppingCart(userName);
     }
 
     public async Task<ShoppingCart> StoreBasket(ShoppingCart basket, CancellationToken cancellationToken)

@@ -1,0 +1,67 @@
+{{- $name := "api-gateway" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  labels:
+    app: api-gateway
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: api-gateway
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: api-gateway
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ASPNETCORE_URLS
+            - name: ReverseProxy__Clusters__catalog-cluster__Destinations__destination1__Address
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ReverseProxy__Clusters__catalog-cluster__Destinations__destination1__Address
+            - name: ReverseProxy__Clusters__basket-cluster__Destinations__destination1__Address
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ReverseProxy__Clusters__basket-cluster__Destinations__destination1__Address
+            - name: ReverseProxy__Clusters__ordering-cluster__Destinations__destination1__Address
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ReverseProxy__Clusters__ordering-cluster__Destinations__destination1__Address

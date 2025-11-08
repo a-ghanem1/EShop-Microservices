@@ -1,0 +1,50 @@
+{{- $name := "discount-grpc" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  labels:
+    app: discount-grpc
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: discount-grpc
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: discount-grpc
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: discount-grpc
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+              name: grpc
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ASPNETCORE_URLS
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: ConnectionStrings__DefaultConnection
+            - name: Kestrel__EndpointDefaults__Protocols
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $name }}-config
+                  key: Kestrel__EndpointDefaults__Protocols

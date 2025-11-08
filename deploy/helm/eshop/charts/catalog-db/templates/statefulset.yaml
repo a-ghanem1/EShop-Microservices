@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: catalog-db
+  labels:
+    app: catalog-db
+spec:
+  serviceName: catalog-db
+  replicas: {{ .Values.statefulset.replicas }}
+  selector:
+    matchLabels:
+      app: catalog-db
+  template:
+    metadata:
+      labels:
+        app: catalog-db
+    spec:
+      containers:
+        - name: catalog-db
+          image: {{ .Values.statefulset.image }}
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "{{ .Values.statefulset.dbName }}"
+            - name: POSTGRES_USER
+              value: "{{ .Values.statefulset.dbUser }}"
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.statefulset.dbPassword }}"
+          volumeMounts:
+            - name: catalog-db-data
+              mountPath: /var/lib/postgresql
+          resources:
+            {{- toYaml .Values.statefulset.resources | nindent 12 }}
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - {{ .Values.statefulset.dbUser }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: catalog-db-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.statefulset.storage }}

@@ -1,0 +1,14 @@
+{{- $name := "api-gateway" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $name }}-config
+  labels:
+    app: api-gateway
+    release: {{ .Release.Name }}
+data:
+  ASPNETCORE_ENVIRONMENT: "{{ .Values.config.aspnetCoreEnvironment }}"
+  ASPNETCORE_URLS: "{{ .Values.config.aspnetCoreUrls }}"
+  ReverseProxy__Clusters__catalog-cluster__Destinations__destination1__Address: "{{ .Values.config.catalogAddress }}"
+  ReverseProxy__Clusters__basket-cluster__Destinations__destination1__Address: "{{ .Values.config.basketAddress }}"
+  ReverseProxy__Clusters__ordering-cluster__Destinations__destination1__Address: "{{ .Values.config.orderingAddress }}"

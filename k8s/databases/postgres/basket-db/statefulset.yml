@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: basket-db
+  namespace: ecommerce
+spec:
+  selector:
+    matchLabels:
+      app: basket-db
+  serviceName: basket-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: basket-db
+    spec:
+      containers:
+        - name: basket-db
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: basket
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: basket-db-storage
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 10
+            periodSeconds: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: basket-db-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

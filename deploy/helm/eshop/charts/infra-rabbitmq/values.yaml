@@ -1,0 +1,14 @@
+statefulset:
+  image: rabbitmq:3.13-management
+  replicas: 1
+  storage: 5Gi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  credentials:
+    username: guest
+    password: guest

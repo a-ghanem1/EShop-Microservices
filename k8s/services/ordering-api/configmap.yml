@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ordering-api-config
+  namespace: ecommerce
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:80"
+  DB_HOST: "ordering-db"
+  DB_PORT: "5432"
+  DB_NAME: "ordering"
+  MESSAGE_BROKER_HOST: "amqp://ecommerce-mq:5672"
+  FEATURE_ORDER_FULLFILMENT: "false"

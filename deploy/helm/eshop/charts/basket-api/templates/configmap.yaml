@@ -1,0 +1,17 @@
+{{- $name := "basket-api" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $name }}-config
+  labels:
+    app: basket-api
+    release: {{ .Release.Name }}
+data:
+  ASPNETCORE_ENVIRONMENT: "{{ .Values.config.aspnetCoreEnvironment }}"
+  ASPNETCORE_URLS: "{{ .Values.config.aspnetCoreUrls }}"
+  DB_HOST: "{{ .Values.config.dbHost }}"
+  DB_PORT: "{{ .Values.config.dbPort }}"
+  DB_NAME: "{{ .Values.config.dbName }}"
+  MESSAGE_BROKER_HOST: "{{ .Values.config.messageBrokerHost }}"
+  REDIS_CONNECTION: "{{ .Values.config.redisConnection }}"
+  DISCOUNT_GRPC_URL: "{{ .Values.config.discountGrpcUrl }}"

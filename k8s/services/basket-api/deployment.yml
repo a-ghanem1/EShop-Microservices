@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basket-api
+  namespace: ecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: basket-api
+  template:
+    metadata:
+      labels:
+        app: basket-api
+    spec:
+      containers:
+        - name: basket-api
+          image: ghanem22/basket-api:latest
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: basket-api-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: basket-api-config
+                  key: ASPNETCORE_URLS
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: basket-api-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: basket-api-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: basket-api-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: basket-api-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: basket-api-secret
+                  key: DB_PASSWORD
+            - name: ConnectionStrings__DefaultConnection
+              value: "Server=$(DB_HOST);Port=$(DB_PORT);Database=$(DB_NAME);User Id=$(DB_USER);Password=$(DB_PASSWORD);Include Error Detail=true"
+            - name: MessageBroker__UserName
+              valueFrom:
+                secretKeyRef:
+                  name: basket-api-secret
+                  key: MESSAGE_BROKER_USERNAME
+            - name: MessageBroker__Password
+              valueFrom:
+                secretKeyRef:
+                  name: basket-api-secret
+                  key: MESSAGE_BROKER_PASS
+            - name: MessageBroker__Host
+              valueFrom:
+                configMapKeyRef:
+                  name: basket-api-config
+                  key: MESSAGE_BROKER_HOST
+            - name: ConnectionStrings__Redis
+              value: "redis:6379"
+            - name: GrpcSettings__DiscountUrl
+              value: "http://discount-grpc"
+          ports:
+            - containerPort: 80

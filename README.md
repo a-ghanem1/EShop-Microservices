@@ -1,77 +1,101 @@
 # 🛒 EShop Microservices
 
+This project is a learning / educational implementation of modern microservices using .NET 8, RabbitMQ, Redis, PostgreSQL and Kubernetes.  
+Originally this project started as Docker Compose based — but now the primary deployment model is **Helm + Kubernetes**.
+
+---
+
 ## 🏗 Architecture Overview
 
-<img width="1258" alt="image" src="https://github.com/user-attachments/assets/aa0a0eea-995d-459b-8eb6-a7318bf81bff" />
+<img width="1258" alt="eshop architecture" src="https://github.com/user-attachments/assets/aa0a0eea-995d-459b-8eb6-a7318bf81bff" />
 
 ---
 
 ## 🧰 Tech Stack
 
-- **.NET 8** – Backend APIs & services
-- **Docker** – Containerization
-- **Redis** – Distributed caching
-- **RabbitMQ** – Messaging broker
-- **MassTransit** – Message bus abstraction
-- **PostgreSQL/Marten** – Catalog and basket databases
-- **SQL Server** – Ordering database
-- **gRPC** – High-performance RPC (Discount service)
-- **YARP / API Gateway** – Unified entry point to microservices
-- **Razor Pages/Refit (Shopping.Web)** – Frontend web app
+| Area | Technology |
+|------|------------|
+| Backend | .NET 8 Microservices, gRPC, MassTransit |
+| Databases | PostgreSQL (all services), Redis |
+| Messaging | RabbitMQ |
+| API Composition | YARP API Gateway |
+| Web App | Razor Pages (Shopping.Web) |
+| Deployment | Kubernetes + Helm |
 
 ---
 
-## 🚀 Getting Started (Local Development)
+## 📂 Repository Structure
 
-### 1. Clone the Repository
+| Path | Purpose |
+|------|---------|
+| `deploy/helm/eshop` | Umbrella Helm chart |
+| `deploy/helm/eshop/charts/*` | Individual microservice Helm sub-charts |
+| `k8s/databases/postgres` | raw DB manifests (legacy) |
+| `k8s/services` | raw deployments before Helm (legacy) |
+| `k8s/infra` | legacy infra manifests (redis, rabbitmq, etc) before Helm conversion |
+
+---
+
+## ☸️ Deploying on Kubernetes (Primary)
+
+**namespace:** `ecommerce`  
+**helm release name:** `eshop`
+
+> **Prerequisite:** You must have an ingress controller running (recommended: ingress-nginx)
+
+### 1) Create Namespace
 
 ```bash
-git clone https://github.com/a-ghanem1/EShop-Microservices.git
-cd eshop-microservices
+kubectl create namespace ecommerce
 ```
 
----
-
-### 2. Prerequisites
-
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
-
----
-
-### 3. Build Docker Services
+### 2) Install Full Platform via Helm
 
 ```bash
-docker compose build
+helm upgrade --install eshop deploy/helm/eshop -n ecommerce
 ```
+
+### 3) Verify Pods
+
+```bash
+kubectl get pods -n ecommerce
+```
+
+### 4) Access via Ingress (local dev)
+
+Add to `/etc/hosts` if needed:
+
+```
+127.0.0.1 shop.ecommerce.local
+127.0.0.1 api.ecommerce.local
+```
+
+| UI | URL |
+|----|-----|
+| Shopping Web | http://shop.ecommerce.local |
+| API Gateway | http://api.ecommerce.local |
 
 ---
 
-### 4. Run the Application
+## 🧪 Local Development (Optional Legacy Docker Mode)
 
 ```bash
 docker compose up -d
 ```
 
----
-
-### 5. Access the Application
-
-- Frontend: [http://localhost:5100](http://localhost:5100)
-- API Gateway: [http://localhost:5005](http://localhost:5005)
-- RabbitMQ Management UI: [http://localhost:15672](http://localhost:15672)  
-  - Username: `guest`  
-  - Password: `guest`
+| Service | URL |
+|--------|-----|
+| Shopping.Web | http://localhost:5100 |
+| API Gateway | http://localhost:5005 |
+| RabbitMQ UI | http://localhost:15672 (guest / guest) |
 
 ---
 
-## 📦 Microservices Overview
+## 🔥 Next Roadmap Steps
 
-| Service        | Port | Description                    |
-|----------------|------|--------------------------------|
-| `catalog.api`  | 5001 | Catalog management             |
-| `basket.api`   | 5002 | Basket operations with Redis   |
-| `discount.grpc`| 5003 | Discount service (gRPC)        |
-| `ordering.api` | 5004 | Order placement and tracking   |
-| `api-gateway`  | 5005 | Aggregates and proxies APIs    |
-| `shopping.web` | 5100 | User-facing frontend app       |
-
+| Phase | Status |
+|-------|--------|
+| Multi-Arch docker images | ✅ done |
+| Convert all services to helm charts | ✅ done |
+| CI (GitHub Actions) → build + push images | ⏳ next phase |
+| CD to Amazon EKS | ⏳ after CI |

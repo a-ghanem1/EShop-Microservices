@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discount-grpc
+  namespace: ecommerce
+spec:
+  selector:
+    matchLabels:
+      app: discount-grpc
+  template:
+    metadata:
+      labels:
+        app: discount-grpc
+    spec:
+      containers:
+        - name: discount-grpc
+          image: ghanem22/discount-grpc:latest
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: discount-grpc-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: discount-grpc-config
+                  key: ASPNETCORE_URLS
+            - name: Kestrel__EndpointDefaults__Protocols
+              valueFrom:
+                configMapKeyRef:
+                  name: discount-grpc-config
+                  key: Kestrel__EndpointDefaults__Protocols
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                configMapKeyRef:
+                  name: discount-grpc-config
+                  key: ConnectionStrings__DefaultConnection
+          ports:
+            - containerPort: 80
