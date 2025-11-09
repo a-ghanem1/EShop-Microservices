@@ -1,0 +1,56 @@
+name: Deploy to EKS
+
+on:
+#   workflow_run:
+#     workflows: ["Build the Images"]
+#     types: [completed]
+#     branches: [main]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  EKS_CLUSTER_NAME: eshop-eks
+  HELM_CHART_PATH: deploy/helm/eshop
+  REGISTRY: docker.io
+  IMAGE_PREFIX: ${{ secrets.DOCKERHUB_USERNAME }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: AWS Auth
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update Kubeconfig
+        run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Create Namespace
+        run: kubectl create namespace ecommerce --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Deploy with Helm
+        run: |
+          helm dependency update $HELM_CHART_PATH
+          helm upgrade --install eshop $HELM_CHART_PATH \
+            --namespace ecommerce \
+            --create-namespace \
+            --set global.image.registry=$REGISTRY \
+            --set global.image.prefix=$IMAGE_PREFIX \
+            --set global.image.tag=latest \
+            --atomic --wait --timeout 10m
+
+      - name: Verify
+        run: |
+          kubectl get pods -n ecommerce
+          kubectl get svc -n ecommerce

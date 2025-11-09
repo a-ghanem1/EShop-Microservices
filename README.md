@@ -91,11 +91,47 @@ docker compose up -d
 
 ---
 
+## 🚀 CI/CD Pipeline
+
+### Continuous Deployment to Amazon EKS
+
+The project uses GitHub Actions to automate deployments to a production EKS cluster in AWS `us-east-1`.
+
+**Workflow:** `.github/workflows/cd-eks.yml`
+
+#### How it Works
+
+1. **Trigger**: Manual dispatch via GitHub Actions UI (`workflow_dispatch`) or automatically after successful image builds
+2. **Authentication**: Uses AWS credentials stored in GitHub Secrets:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+   - `DOCKERHUB_USERNAME` (for image registry prefix)
+3. **Cluster Access**: Configures `kubectl` to target the `eshop-eks` cluster in `us-east-1`
+4. **Helm Deployment**: 
+   - Updates Helm dependencies
+   - Deploys/upgrades the `eshop` release to the `ecommerce` namespace
+   - Uses `--atomic` and `--wait` flags to ensure zero-downtime deployments
+   - 10-minute timeout for complete rollout verification
+5. **Verification**: Post-deployment health checks via `kubectl get pods` and `kubectl get svc`
+
+#### Required GitHub Secrets
+
+| Secret | Purpose |
+|--------|---------|
+| `AWS_ACCESS_KEY_ID` | AWS IAM access key for EKS authentication |
+| `AWS_SECRET_ACCESS_KEY` | AWS IAM secret key |
+| `DOCKERHUB_USERNAME` | Docker Hub username for image registry |
+
+#### Manual Deployment
+
+Navigate to **Actions** → **Deploy to EKS** → **Run workflow** and click "Run workflow" button.
+
 ## 🔥 Next Roadmap Steps
 
 | Phase | Status |
 |-------|--------|
-| Multi-Arch docker images | ✅ done |
-| Convert all services to helm charts | ✅ done |
-| CI (GitHub Actions) → build + push images | ⏳ next phase |
-| CD to Amazon EKS | ⏳ after CI |
+| Multi-Arch docker images | ✅ Complete |
+| Convert all services to Helm charts | ✅ Complete |
+| CI/CD Pipeline to Amazon EKS | ✅ Complete |
+| Infrastructure as Code (Terraform) | 🔜 Planned |
+| Observability Stack (Prometheus/Grafana) | 🔜 Planned |
